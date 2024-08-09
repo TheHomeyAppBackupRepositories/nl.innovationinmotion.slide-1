@@ -5,7 +5,7 @@
     "nl": "Slide"
   },
   "sdk": 3,
-  "version": "1.0.7",
+  "version": "2.0.2",
   "compatibility": ">=5.0.0",
   "platforms": [
     "local",
@@ -24,6 +24,10 @@
       {
         "name": "Ruben te Bogt",
         "email": "info@rubentebogt.nl"
+      },
+      {
+        "name": "Geurt Dijker",
+        "email": "Homey.Apps@dijker.nu"
       }
     ]
   },
@@ -67,7 +71,7 @@
         "en": "Touch & Go"
       },
       "getable": true,
-      "setable": false,
+      "setable": true,
       "uiComponent": "sensor",
       "icon": "/assets/touch-icon.svg"
     },
@@ -78,7 +82,7 @@
         "nl": "Gordijn positie"
       },
       "getable": true,
-      "setable": false,
+      "setable": true,
       "uiComponent": "sensor",
       "icon": "/assets/percent-icon.svg",
       "units": {
@@ -152,8 +156,87 @@
           "template": "add_devices"
         }
       ]
+    },
+    {
+      "id": "slide_local",
+      "name": {
+        "en": "Slide local API",
+        "nl": "Slide lokale API"
+      },
+      "platforms": [
+        "local"
+      ],
+      "images": {
+        "large": "drivers/slide/assets/images/large.jpg",
+        "small": "drivers/slide/assets/images/small.jpg"
+      },
+      "class": "curtain",
+      "capabilities": [
+        "windowcoverings_closed",
+        "windowcoverings_set",
+        "curtain_position",
+        "touch_go_state"
+      ],
+      "capabilitiesOptions": {
+        "dim": {
+          "title": {
+            "en": "Drag to open/close",
+            "nl": "Verschuif om te openen/sluiten"
+          },
+          "preventInsights": true,
+          "preventTag": true,
+          "uiQuickAction": false
+        },
+        "onoff": {
+          "title": {
+            "en": "Open/close curtain",
+            "nl": "Open/sluit gordijn"
+          }
+        }
+      },
+      "connectivity": [
+        "lan"
+      ],
+      "discovery": "slide_local",
+      "pair": [
+        {
+          "id": "set_local"
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
     }
   ],
+  "discovery": {
+    "slide_local": {
+      "type": "mdns-sd",
+      "mdns-sd": {
+        "name": "hap",
+        "protocol": "tcp"
+      },
+      "id": "{{name}}",
+      "conditions": [
+        [
+          {
+            "field": "txt.md",
+            "match": {
+              "type": "string",
+              "value": "Slide"
+            }
+          }
+        ]
+      ]
+    }
+  },
   "flow": {
     "actions": [
       {
@@ -162,15 +245,18 @@
           "en": "Stop immediately",
           "nl": "Stop motor direct"
         },
+        "titleFormatted": {
+          "en": "Stop [[device]] immediately",
+          "nl": "Stop motor van [[device]] direct"
+        },
         "args": [
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
+            "title": {
               "en": "Select slide",
               "nl": "Selecteer slide"
-            },
-            "filter": "driver_id=slide"
+            }
           }
         ]
       },
@@ -180,15 +266,18 @@
           "en": "Enable Touch & Go",
           "nl": "Activeer Touch & Go"
         },
+        "titleFormatted": {
+          "en": "Enable Touch & Go on [[device]]",
+          "nl": "Activeer Touch & Go voor [[device]]"
+        },
         "args": [
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
+            "title": {
               "en": "Select slide",
               "nl": "Selecteer slide"
-            },
-            "filter": "driver_id=slide"
+            }
           }
         ]
       },
@@ -198,15 +287,18 @@
           "en": "Disable Touch & Go",
           "nl": "Deactiveer Touch & Go"
         },
+        "titleFormatted": {
+          "en": "Disable Touch & Go on [[device]]",
+          "nl": "Deactiveer Touch & Go voor [[device]]"
+        },
         "args": [
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
+            "title": {
               "en": "Select slide",
               "nl": "Selecteer slide"
-            },
-            "filter": "driver_id=slide"
+            }
           }
         ]
       },
@@ -216,15 +308,18 @@
           "en": "Trigger a re-calibration",
           "nl": "Start een her-calibratie"
         },
+        "titleFormatted": {
+          "en": "Trigger a re-calibration of [[device]]",
+          "nl": "Start een her-calibratie van [[device]]"
+        },
         "args": [
           {
             "name": "device",
             "type": "device",
-            "placeholder": {
+            "title": {
               "en": "Select slide",
               "nl": "Selecteer slide"
-            },
-            "filter": "driver_id=slide"
+            }
           }
         ]
       },
